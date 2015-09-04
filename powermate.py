@@ -9,7 +9,9 @@ try:
 except ImportError:
   import Queue as queue
 import struct
+import subprocess
 import threading
+import time
 import traceback
 
 
@@ -271,32 +273,58 @@ class ExamplePowerMate(PowerMateBase):
     self._pulsing = False
     self._brightness = MAX_BRIGHTNESS
 
-  def short_press(self):
-    print('Short press!')
+  def long_press(self):
     self._pulsing = not self._pulsing
-    print(self._pulsing)
     if self._pulsing:
       return LedEvent.pulse()
     else:
       return LedEvent(brightness=self._brightness)
 
-  def long_press(self):
-    print('Long press!')
-
   def rotate(self, rotation):
-    print('Rotate {}!'.format(rotation))
     self._brightness = max(0, min(MAX_BRIGHTNESS, self._brightness + rotation))
     self._pulsing = False
     return LedEvent(brightness=self._brightness)
 
-  def push_rotate(self, rotation):
-    print('Push rotate {}!'.format(rotation))
-
 
 class ExampleBadHandler(PowerMateEventHandler):
-  def rotate(self, rotation):
-    import time
-    time.sleep(1)
+  _skip_delay = 0.5
+  _last_skip = 0
+
+  def short_press(self):
+    self.play_pause()
+
+  def long_press(self):
+    pass
+
+  def push_rotate(self, rotation):
+    now = time.time()
+    if now - self._last_skip > self._skip_delay:
+      self._last_skip = now
+    else:
+      return
+    if rotation > 0:
+      self.next_track()
+    else:
+      self.previous_track()
+
+  def play_pause(self):
+    print ('play/pause')
+    self.click_on_element('play-pause')
+
+  def next_track(self):
+    print ('next track')
+    self.click_on_element('forward')
+
+  def previous_track(self):
+    print ('previous track')
+    self.click_on_element('rewind')
+
+  def click_on_element(self, data_id):
+    command = (
+        '/usr/local/bin/chromix with https://play.google.com/music/listen '
+        'goto "javascript:document.querySelector(\'[data-id=%s]\').click();"'
+        % data_id)
+    subprocess.call(command, shell=True)
 
 
 if __name__ == "__main__":
