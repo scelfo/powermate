@@ -287,7 +287,7 @@ class ExamplePowerMate(PowerMateBase):
 
 
 class ExampleBadHandler(PowerMateEventHandler):
-  _skip_delay = 0.5
+  _skip_delay = 1.5
   _last_skip = 0
 
   def short_press(self):
