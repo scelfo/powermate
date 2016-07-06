@@ -7,20 +7,20 @@ class ChromixController:
   def next_track(self):
     print ('next track')
     #self.click_on_element_google_play('forward')
-    #self.click_on_element_rhapsody('div.player-advance-button')
-    self.click_on_element_spotify('button[id=next]');
+    self.click_on_element_rhapsody('div.player-advance-button')
+    #self.click_on_element_spotify('button[id=next]');
 
   def play_pause(self):
     print ('play/pause')
     #self.click_on_element_google_play('play-pause')
-    #self.click_on_element_rhapsody('[title=Play],[title=Pause]')
-    self.click_on_element_spotify('button[id=play-pause]');
+    self.click_on_element_rhapsody('div.player-play-button > div')
+    #self.click_on_element_spotify('button[id=play-pause]');
 
   def previous_track(self):
     print ('previous track')
     #self.click_on_element_google_play('rewind')
-    #self.click_on_element_rhapsody('div.player-rewind-button')
-    self.click_on_element_spotify('button[id=previous]');
+    self.click_on_element_rhapsody('div.player-rewind-button')
+    #self.click_on_element_spotify('button[id=previous]');
 
   def click_on_element_spotify(self, data_id):
     command = (

@@ -9,10 +9,10 @@ try:
 except ImportError:
   import Queue as queue
 import struct
-import subprocess
 import threading
 import time
 import traceback
+from chromix import ChromixController
 
 
 EV_MSC = 0x04
@@ -286,7 +286,7 @@ class ExamplePowerMate(PowerMateBase):
     return LedEvent(brightness=self._brightness)
 
 
-class ExampleBadHandler(PowerMateEventHandler):
+class ExampleBadHandler(PowerMateEventHandler, ChromixController):
   _skip_delay = 1.5
   _last_skip = 0
 
@@ -306,25 +306,6 @@ class ExampleBadHandler(PowerMateEventHandler):
       self.next_track()
     else:
       self.previous_track()
-
-  def play_pause(self):
-    print ('play/pause')
-    self.click_on_element('play-pause')
-
-  def next_track(self):
-    print ('next track')
-    self.click_on_element('forward')
-
-  def previous_track(self):
-    print ('previous track')
-    self.click_on_element('rewind')
-
-  def click_on_element(self, data_id):
-    command = (
-        '/usr/local/bin/chromix with https://play.google.com/music/listen '
-        'goto "javascript:document.querySelector(\'[data-id=%s]\').click();"'
-        % data_id)
-    subprocess.call(command, shell=True)
 
 
 if __name__ == "__main__":
