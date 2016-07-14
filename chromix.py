@@ -32,7 +32,7 @@ class ChromixController:
 
   def click_on_element_rhapsody(self, data_id):
     command = (
-        '/usr/local/bin/chromix with https://app.rhapsody.com '
+        '/usr/local/bin/chromix with https://app.napster.com '
         'goto "javascript:document.querySelector(\'%s\').click();"'
         % data_id)
     subprocess.call(command, shell=True)
