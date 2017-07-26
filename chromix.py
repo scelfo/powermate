@@ -38,22 +38,31 @@ class ChromixController:
     subprocess.call(command, shell=True)
 
   def click_on_element_google_play(self, data_id):
+    tab_id = int(subprocess.check_output([
+        '/usr/local/bin/chromix-too',
+        'tid',
+        'https://play.google.com/music/listen']))
     command = (
-        '/usr/local/bin/chromix with https://play.google.com/music/listen '
-        'goto "javascript:document.querySelector(\'[data-id=%s]\').click();"'
-        % data_id)
+        '/usr/local/bin/chromix-too raw chrome.tabs.executeScript %d '
+        '\'{"code": "document.querySelector(\\"[data-id=%s]\\").click()"}\'' % (tab_id, data_id))
     subprocess.call(command, shell=True)
 
 
 if __name__ == '__main__':
   chromix_controller = ChromixController()
+  no_command = True
   for arg in sys.argv:
     if arg == 'next':
       chromix_controller.next_track()
+      no_command = False
       break
     if arg == 'previous':
       chromix_controller.previous_track()
+      no_command = False
       break
     if arg == 'play-pause':
       chromix_controller.play_pause()
+      no_command = False
       break
+  if no_command:
+    print 'Must specify a command: next, previous, play-pause'
